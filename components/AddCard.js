@@ -1,80 +1,66 @@
 import React, { Component } from 'react'
 import { View,Platform, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
-import { receiveDecks, addDeck} from '../actions/index'
-import { saveDeckTitle, getDeck } from '../_utils/api' 
 import { connect } from 'react-redux'
-import { NavigationActions } from 'react-navigation'
-
+import { addCardToDeck } from '../_utils/api' 
+import { getDeck } from '../_utils/api'
+import { addCard, addDeck, receiveDecks } from '../actions/index'
 
 function SubmitBtn ({ onPress, disabled }) {
     return (
      <TouchableOpacity
-     disabled={disabled}
      style={Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn}
-     onPress={onPress}> 
-      <Text style={styles.submitBtnText}>Create Deck</Text>
+     onPress={onPress}
+     disabled={disabled}> 
+      <Text style={styles.submitBtnText}>Submit</Text>
      </TouchableOpacity>
     )
 }
 
-class AddDeck extends Component {
-
+class AddCard extends Component {
     state = {
-        title: '',
-        questions: []
+        question: '',
+        answer: ''
     }
-
-    // navigateToDeck = () => {
-    //     const { dispatch, goBack } = this.props
-    //     const title = this.state.title
-    //     const deck = this.state
-    //     const deckId = this.props.deckId
-
-    //     dispatch(addDeck({
-    //         [title]: deck
-    //     })) 
-    
-    //     this.props.navigation.navigate(
-    //     'Decks',
-    //     {deckId: deckId}
-    //    )}
 
 
     submit = () => {
-     const { dispatch, goBack } = this.props
-     const title = this.state.title
-     const deck = this.state
-     dispatch(addDeck({
-        [title]: deck
-    })) 
+        const {  goBack,  state, dispatch } = this.props
+        const questions = this.props.state.questions
+        const deckId = this.props.deckId
+        // console.log(questions, deckId, 'State')
+        const title = this.props.deckId
 
-     this.setState({title: ''})
+        const card = this.state
+       
+        addCardToDeck({title,card})
+        
+     this.props.navigation.state.params.updateData(card)
+     goBack()
 
 
-    saveDeckTitle({title, deck})
-
-    this.props.navigation.navigate(
-        'Decks',
-        {deckId: title}
-    )
-
+       
     }
 
 
-
     render() {
-        // console.log(this.state.text)
+        const {answer, question} = this.state
         return(
             <View style={styles.container}>
             <View>
-              <Text style={styles.textInfo}>What is the title of your new Deck?</Text>
                 <TextInput 
-                value={this.state.title}
+                value={question}
+                placeholder='Question'
+                onChangeText={(value) => this.setState({question: value})}
                  style={styles.textInput}
-                 onChangeText={(value) => this.setState({title: value})}
+                />
+                <TextInput 
+                value={answer}
+                placeholder='Answer'
+                onChangeText={(value) => this.setState({answer: value})}
+                 style={styles.textInput}
                 />
                 </View>
-              <SubmitBtn disabled={this.state.title === ''}  onPress={this.submit} />
+              <SubmitBtn onPress={this.submit} disabled={answer==='' || question === ''}/>
             </View>
         )
     }
@@ -102,7 +88,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#335a6b',
         padding: 10,
         borderRadius: 7,
-        height: 45,
+        height: 65,
         marginLeft: 40,
         marginRight: 40,
         color: '#fff',
@@ -115,7 +101,7 @@ const styles = StyleSheet.create({
      backgroundColor: '#335a6b',
      padding: 10,
      borderRadius: 2,
-     height: 45,
+     height: 75,
      marginLeft: 30,
      marginRight: 30,
      justifyContent: 'center',
@@ -126,19 +112,21 @@ const styles = StyleSheet.create({
         color: '#f4f4f4',
         fontSize: 22,
         textAlign: 'center',
-
-    },
-    textInfo: {
-        color: '#335a6b',
-        fontSize: 30,
-        textAlign: 'center',
-    }
-
-    
+    },    
 })
 
-function mapDispatchToProps(dispatch, {navigation}){
+function mapStateToProps(state, { navigation}) {
 
+    const{ deckId } = navigation.state.params
+
+    // console.log(deckId)
+    return {
+       deckId,
+       state: state[deckId]
+    }
+}
+
+function mapDispatchToProps(dispatch, {navigation}){
     return {
         dispatch,
         goBack: () => navigation.goBack()
@@ -146,4 +134,5 @@ function mapDispatchToProps(dispatch, {navigation}){
 
 }
 
-export default connect(null, mapDispatchToProps)(AddDeck)
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddCard)
