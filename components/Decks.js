@@ -37,18 +37,16 @@ class Decks extends Component {
    )}
   
 
-updateData = data => {
+// updateData = data => {
+//  const { deck } = this.state
+//  const { title, questions } = deck
+// //  console.log(data, questions);
 
-
- const { deck } = this.state
- const { title, questions } = deck
-//  console.log(data, questions);
-
- this.setState((prevState) => ({
-   deck: prevState
- })) 
+//  this.setState((prevState) => ({
+//    deck: prevState
+//  })) 
  
-}
+// }
 
   
   
@@ -57,20 +55,15 @@ updateData = data => {
     this.props.navigation.navigate("AddCard", {
       name: "AddCard",
       deckId: deckId,
-      updateData: this.updateData
     });
   }
 
    onDelete = () => {
     const deckId = this.props.deckId
     const { dispatch, deck } = this.props
-    //  const keys = Object.keys(deck).filter(a => a !== deckId).map((a)=> deck[a])
-    //  console.log({keys})
 
-      dispatch(removeDeck({deck}))   
-          // }
-         
-        // });
+     dispatch(removeDeck(deckId))   
+
      return AsyncStorage.getItem(DECK_STORAGE_KEY)
      .then((results) => {
       const data = JSON.parse(results)

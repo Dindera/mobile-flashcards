@@ -19,10 +19,10 @@ export function addDeck(deck) {
 
 }
 
-export function removeDeck(decks) {
+export function removeDeck(title) {
     return{
         type: REMOVE_DECK,
-        decks
+        title
     }
 
 
@@ -30,10 +30,11 @@ export function removeDeck(decks) {
 
 
 
-export function addCard({card}) {
+export function addCard(title,card) {
     return{
         type: ADD_CARD,
-        card,
+        title,
+        card
         
     }
 }

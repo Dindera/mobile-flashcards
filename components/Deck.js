@@ -5,13 +5,13 @@ import { View,Platform, Text, StyleSheet, TextInput, TouchableOpacity } from 're
 
 export default function({decks, onPressa, onPressq, onPressd}) {
 
-  const { title , questions, ...rest} = decks
+  const { title , questions, ...rest} = decks || {}
 
   return(
     <View style={styles.container}>
         <View style={styles.cardContainer}>
             <Text style={styles.textBig}> {title} </Text>
-            <Text style={styles.textSmall}> {questions.length} cards </Text>
+            <Text style={styles.textSmall}> {questions && questions.length} cards </Text>
             </View>
             <View style={styles.btns}>
             <TouchableOpacity

@@ -14,17 +14,19 @@ function decks (state = {}, action){
             ...action.deck
         }
         case REMOVE_DECK :
-        console.log('Remove Decks', action.decks)
-        const deck = action.decks
+        const data = state
+        delete data[action.title]
+
         return {
             ...state,
             ...action.decks
         }
         case ADD_CARD:
-        console.log(action.card)
-        return{
+         state[action.title].questions.concat(action.card)
+         
+        return {
             ...state,
-            ...action.card 
+            ...action.deck 
         }
         default :
         return state

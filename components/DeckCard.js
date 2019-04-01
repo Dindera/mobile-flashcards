@@ -23,7 +23,7 @@ export default function ({ decks , navigation, onChanged}) {
               
               )}>
                <Text style={styles.textBig}>{title}</Text>
-               <Text style={styles.textSmall}> {questions.length} cards </Text>
+               <Text style={styles.textSmall}> {questions && questions.length} cards </Text>
                </TouchableOpacity>
                </View>
             )

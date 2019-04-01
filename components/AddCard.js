@@ -31,10 +31,12 @@ class AddCard extends Component {
         const title = this.props.deckId
 
         const card = this.state
-       
+        
+        dispatch(addCard(deckId,card))
         addCardToDeck({title,card})
         
-     this.props.navigation.state.params.updateData(card)
+    //  this.props.navigation.state.params.updateData(card)
+
      goBack()
 
 
