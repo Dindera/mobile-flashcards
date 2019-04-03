@@ -1,51 +1,95 @@
 import React, { Component } from 'react'
-import { View,Platform, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View,Platform,ScrollView, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 
 class Quiz extends Component {
 
     state = {
-        number: false
+        answer: false,
+        number: 0,
+        funcs: []
+
     }
 
 
-    onClickNav = (e) => {
+    
+    onClickNav = (i) => {
+      const { deck, deckId } = this.props
+      const {title, questions} = deck
+      
+    console.log('my value', i)
+    this.setState(() => ({
+      number: i
+    }))
+      return function() {
+       
+      };
+    }
 
-        this.setState(() => ({
-            number: true
-        }))
+    onChange = (e) => {
+      const { deck, deckId } = this.props
+      const {title, questions} = deck
+
+      for (let i = 0; i < questions.length; i++) {
+        funcs[i] = this.onClickNav(i)
+        
+      }
+
+      for (let j = 0; j < questions.length; j++) {
+        funcs[j]()
+        
+      }
+
     }
 
 
     render() {
-
         const { deck, deckId } = this.props
-        const {title, questions} = deck[deckId]
-        const { number } = this.state
+        const {title, questions} = deck
+        const { answer, number, funcs } = this.state
 
-        console.log( number, 'DECKKK')
         return(
-            <View>
+
+            <View style={styles.container}
+            >
                 {questions.length === 0 
                 ? 
-                <Text>Sorry, you cannot take this quiz because there are no cards in the deck</Text>    
-                :
-                 questions.map((a) => (
-                     <Text key={number}>{number}</Text>
-                 ))
+                <View style={{flex: 1, justifyContent: 'center', marginRight: 20, marginLeft: 20}}>
+                <Text style={{fontSize: 24}}>Sorry, you cannot take this quiz because there are no cards in the deck.</Text>    
+                </View >
+                :  
+                <View style={{flex: 1, justifyContent: 'spa', marginTop: 10, marginRight: 10, marginLeft: 10}}>
+                <Text style={{fontSize: 14}}>{`${questions.indexOf(questions[number])+1}/${questions.length}`}</Text>
+                   <View  style={{flex: 1, justifyContent: 'space-around', marginTop: 10, marginRight: 10, marginLeft: 10}}>
+                    <View>
+                    <Text style={{fontSize: 30,textAlign: 'center',}}>{answer === false ? questions[number].question : questions[number].answer}</Text>
+                    <TouchableOpacity
+                    onPress={() => answer === false ? this.setState({answer: true}) : this.setState({answer: false})}
+                    > 
+                      <Text style={{fontSize: 18, fontWeight: 'bold' ,color: 'red',alignSelf: 'center',}}>{answer === false ? 'Answer': 'Question'}</Text>
+                      
+                     </TouchableOpacity>
+                    </View>
+                  <View>
+                 <TouchableOpacity
+                 style={[Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn, {backgroundColor: 'green'}]}
+                 onPress={this.onClickNav}
+                 value={'Yes!'}
+                 >
+                   <Text style={{color: '#f4f4f4', fontSize: 20}}>Correct</Text>
+                 </TouchableOpacity> 
+                 <TouchableOpacity
+                 style={[Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn, {backgroundColor: 'red'}]}
+                 onPress={this.onClickNav}
+                 value={'No!'}
+                 >
+                   <Text style={{color: '#f4f4f4', fontSize: 20}}>Incorrect</Text>
+                 </TouchableOpacity>  
+                 </View>
+                 </View>
+                 </View>
                 }
-            <TouchableOpacity
-            style={[Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn, {backgroundColor: 'green'}]}
-            onPress={this.onClickNav}
-            >
-              <Text style={{color: '#f4f4f4', fontSize: 20}}>Correct</Text>
-            </TouchableOpacity> 
-            <TouchableOpacity
-            style={[Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn, {backgroundColor: 'red'}]}
-            
-            >
-              <Text style={{color: '#f4f4f4', fontSize: 20}}>Incorrect</Text>
-            </TouchableOpacity>    
+  
             </View>
         )
     }
@@ -53,11 +97,11 @@ class Quiz extends Component {
 
 function mapStateToProps(state, {navigation}){
     const { deckId } = navigation.state.params
-    console.log(state)
+  
   
     return {
       deckId,
-      deck: state
+      deck: state[deckId]
     }
   }
   
@@ -65,7 +109,7 @@ function mapStateToProps(state, {navigation}){
     container: {
       flex: 1,
       backgroundColor: '#f4f4f4',
-      justifyContent: 'space-between'
+      justifyContent: 'center'
     },
     cardContainer: {
       height: 80,
