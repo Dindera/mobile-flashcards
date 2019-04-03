@@ -4,7 +4,7 @@ import { getDecks, getDeck } from '../_utils/api'
 import { receiveDecks, addDeck} from '../actions/index'
 
 
-export default function ({ decks , navigation, onChanged}) {
+export default function ({ decks , navigation}) {
 
         return(
             <View style={styles.container}>
@@ -13,7 +13,7 @@ export default function ({ decks , navigation, onChanged}) {
               const {title, questions, ...rest} = decks[deck]
               
               return(
-              <View onChange={onChanged} style={{borderBottomWidth: 2}} key={deck}>
+              <View  style={{borderBottomWidth: 2}} key={deck}>
               <TouchableOpacity 
               style={styles.cardContainer}
               onPress={() => navigation.navigate(
