@@ -24,20 +24,6 @@ class AddDeck extends Component {
         questions: []
     }
 
-    // navigateToDeck = () => {
-    //     const { dispatch, goBack } = this.props
-    //     const title = this.state.title
-    //     const deck = this.state
-    //     const deckId = this.props.deckId
-
-    //     dispatch(addDeck({
-    //         [title]: deck
-    //     })) 
-    
-    //     this.props.navigation.navigate(
-    //     'Decks',
-    //     {deckId: deckId}
-    //    )}
 
 
     submit = () => {

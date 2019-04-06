@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View,Platform,ScrollView, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View,Platform, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 
 class Quiz extends Component {
@@ -7,46 +7,30 @@ class Quiz extends Component {
     state = {
         answer: false,
         number: 0,
-        funcs: []
+        correct: 0,
+        Incorrect: 0
 
     }
 
+    navigate = () =>  {
+      const { deck, navigation, deckId } = this.props
+      const {questions} = deck
+      const { correct, Incorrect, number } = this.state
+      const lastQuestion = questions[number]
 
-    
-    onClickNav = (i) => {
-      const { deck, deckId } = this.props
-      const {title, questions} = deck
-      
-    console.log('my value', i)
-    this.setState(() => ({
-      number: i
-    }))
-      return function() {
+   if(questions && lastQuestion && lastQuestion.question){
+        console.log('Working')
        
-      };
-    }
-
-    onChange = (e) => {
-      const { deck, deckId } = this.props
-      const {title, questions} = deck
-
-      for (let i = 0; i < questions.length; i++) {
-        funcs[i] = this.onClickNav(i)
-        
       }
-
-      for (let j = 0; j < questions.length; j++) {
-        funcs[j]()
-        
-      }
-
     }
 
 
     render() {
-        const { deck, deckId } = this.props
-        const {title, questions} = deck
-        const { answer, number, funcs } = this.state
+        const { deck, navigation, deckId } = this.props
+        const {questions} = deck
+        const { answer, number, correct, Incorrect } = this.state
+        const lastQuestion = questions[number]
+   
 
         return(
 
@@ -58,38 +42,52 @@ class Quiz extends Component {
                 <Text style={{fontSize: 24}}>Sorry, you cannot take this quiz because there are no cards in the deck.</Text>    
                 </View >
                 :  
-                <View style={{flex: 1, justifyContent: 'spa', marginTop: 10, marginRight: 10, marginLeft: 10}}>
-                <Text style={{fontSize: 14}}>{`${questions.indexOf(questions[number])+1}/${questions.length}`}</Text>
+                <View style={{flex: 1, justifyContent: 'space-around', marginTop: 10, marginRight: 10, marginLeft: 10}}>
+                   {questions && lastQuestion && lastQuestion.question ?
+                   <View style={{flex: 1, justifyContent: 'space-around', marginTop: 10, marginRight: 10, marginLeft: 10}}>
+                   <Text style={{fontSize: 14}}>{`${questions.indexOf(questions[number])+1}/${questions.length}`}</Text>
                    <View  style={{flex: 1, justifyContent: 'space-around', marginTop: 10, marginRight: 10, marginLeft: 10}}>
                     <View>
-                    <Text style={{fontSize: 30,textAlign: 'center',}}>{answer === false ? questions[number].question : questions[number].answer}</Text>
+                    <Text style={{fontSize: 30,textAlign: 'center',}}>{answer === false ? questions && questions[number].question : questions && questions[number].answer}</Text>
                     <TouchableOpacity
                     onPress={() => answer === false ? this.setState({answer: true}) : this.setState({answer: false})}
                     > 
                       <Text style={{fontSize: 18, fontWeight: 'bold' ,color: 'red',alignSelf: 'center',}}>{answer === false ? 'Answer': 'Question'}</Text>
-                      
+
                      </TouchableOpacity>
                     </View>
                   <View>
                  <TouchableOpacity
                  style={[Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn, {backgroundColor: 'green'}]}
-                 onPress={this.onClickNav}
-                 value={'Yes!'}
-                 >
+                 onPress={() => {
+                  this.navigate() 
+                  this.setState(prevState => ({number: prevState.number + 1 }))
+                  this.setState(prevState => ({correct: prevState.correct + 1}))
+                
+                }  
+               }>
                    <Text style={{color: '#f4f4f4', fontSize: 20}}>Correct</Text>
                  </TouchableOpacity> 
                  <TouchableOpacity
                  style={[Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn, {backgroundColor: 'red'}]}
-                 onPress={this.onClickNav}
-                 value={'No!'}
+                 onPress={() => {
+                  this.navigate()
+                   this.setState(prevState => ({number: prevState.number + 1 }))
+                   this.setState(prevState => ({Incorrect: prevState.Incorrect + 1}))
+                   
+                  }  
+                }
                  >
                    <Text style={{color: '#f4f4f4', fontSize: 20}}>Incorrect</Text>
                  </TouchableOpacity>  
                  </View>
                  </View>
                  </View>
+                   : 
+                  navigation.navigate('QuizResults', {deckId: deckId, correct: correct, Incorrect: Incorrect})
+                    }
+                 </View>
                 }
-  
             </View>
         )
     }
@@ -97,14 +95,15 @@ class Quiz extends Component {
 
 function mapStateToProps(state, {navigation}){
     const { deckId } = navigation.state.params
-  
-  
+
+
     return {
       deckId,
-      deck: state[deckId]
+      deck: state[deckId],
+      goBack: () => navigation.goBack()
     }
   }
-  
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -138,19 +137,19 @@ function mapStateToProps(state, {navigation}){
       marginTop: 10,
       alignItems: 'center',
       marginBottom: 10,
-      
+
     },
     textBig: {
       color: '#335a6b',
       fontSize: 32,
       textAlign: 'center',
-  
+
     },
     textSmall: {
       color: '#335a6b',
       fontSize: 20,
       textAlign: 'center',
-  
+
     },
     submitBtn: {
       height: 50,
@@ -161,10 +160,10 @@ function mapStateToProps(state, {navigation}){
       fontSize: 18,
       justifyContent: 'center',
       alignItems: 'center',
-      
+
     },
     iosSubmitBtn: {
-      
+
       padding: 10,
       borderRadius: 7,
       height: 80,
@@ -175,7 +174,7 @@ function mapStateToProps(state, {navigation}){
       fontSize: 18,
       justifyContent: 'center',
       alignItems: 'center',
-    
+
   },
   androidSubmitBtn: {
    padding: 10,
@@ -188,10 +187,9 @@ function mapStateToProps(state, {navigation}){
    justifyContent: 'center',
    alignItems: 'center',
    fontSize: 18,
-  
+
   },
   })
 
 
   export default connect(mapStateToProps)(Quiz)
-

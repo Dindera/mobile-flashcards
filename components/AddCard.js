@@ -27,7 +27,7 @@ class AddCard extends Component {
         const {  goBack,  state, dispatch } = this.props
         const questions = this.props.state.questions
         const deckId = this.props.deckId
-        // console.log(questions, deckId, 'State')
+
         const title = this.props.deckId
 
         const card = this.state
@@ -35,7 +35,6 @@ class AddCard extends Component {
         dispatch(addCard(deckId,card))
         addCardToDeck({title,card})
         
-    //  this.props.navigation.state.params.updateData(card)
 
      goBack()
 
