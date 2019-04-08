@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native'
 // import { getDataInfo, formatMetaData } from '../_utils/helpers'
-import { getDecks, getDeck, DECK_STORAGE_KEY } from '../_utils/api'
-import { receiveDecks, addDeck} from '../actions/index'
+import { getDecks, setNotification} from '../_utils/api'
+import { receiveDecks} from '../actions/index'
 import { connect} from 'react-redux'
+
+
 import DeckCard from './DeckCard'
-import { AsyncStorage } from 'react-native'
+
 
 class DeckHome extends Component {
 
    componentWillMount(){
+    setNotification()
+
     const { dispatch } = this.props
       getDecks()
       .then((decks) => 
