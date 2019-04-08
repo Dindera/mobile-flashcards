@@ -2,27 +2,16 @@ import React, { Component } from 'react'
 import { View,Platform, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 
+
 class Quiz extends Component {
 
     state = {
         answer: false,
         number: 0,
         correct: 0,
-        Incorrect: 0
-
+        Incorrect: 0,
     }
 
-    navigate = () =>  {
-      const { deck, navigation, deckId } = this.props
-      const {questions} = deck
-      const { correct, Incorrect, number } = this.state
-      const lastQuestion = questions[number]
-
-   if(questions && lastQuestion && lastQuestion.question){
-        console.log('Working')
-       
-      }
-    }
 
 
     render() {
@@ -30,18 +19,24 @@ class Quiz extends Component {
         const {questions} = deck
         const { answer, number, correct, Incorrect } = this.state
         const lastQuestion = questions[number]
-   
+        const percentResults = (correct/questions.length) * 100
+        
 
-        return(
-
+        if(questions.length === 0 ){
+          return(
+            <View style={styles.container}>
+          <View style={{flex: 1, justifyContent: 'center', marginRight: 20, marginLeft: 20}}>
+          <Text style={{fontSize: 24}}>Sorry, you cannot take this quiz because there are no cards in the deck.</Text>    
+          </View >
+          </View>
+          )
+                
+         
+        }
+     
+        return(  
             <View style={styles.container}
             >
-                {questions.length === 0 
-                ? 
-                <View style={{flex: 1, justifyContent: 'center', marginRight: 20, marginLeft: 20}}>
-                <Text style={{fontSize: 24}}>Sorry, you cannot take this quiz because there are no cards in the deck.</Text>    
-                </View >
-                :  
                 <View style={{flex: 1, justifyContent: 'space-around', marginTop: 10, marginRight: 10, marginLeft: 10}}>
                    {questions && lastQuestion && lastQuestion.question ?
                    <View style={{flex: 1, justifyContent: 'space-around', marginTop: 10, marginRight: 10, marginLeft: 10}}>
@@ -60,7 +55,7 @@ class Quiz extends Component {
                  <TouchableOpacity
                  style={[Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn, {backgroundColor: 'green'}]}
                  onPress={() => {
-                  this.navigate() 
+                  
                   this.setState(prevState => ({number: prevState.number + 1 }))
                   this.setState(prevState => ({correct: prevState.correct + 1}))
                 
@@ -71,7 +66,7 @@ class Quiz extends Component {
                  <TouchableOpacity
                  style={[Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn, {backgroundColor: 'red'}]}
                  onPress={() => {
-                  this.navigate()
+                  
                    this.setState(prevState => ({number: prevState.number + 1 }))
                    this.setState(prevState => ({Incorrect: prevState.Incorrect + 1}))
                    
@@ -83,11 +78,42 @@ class Quiz extends Component {
                  </View>
                  </View>
                  </View>
-                   : 
-                  navigation.navigate('QuizResults', {deckId: deckId, correct: correct, Incorrect: Incorrect})
+                   :
+
+                   <View style={{flex: 1, justifyContent: 'space-around', marginTop: 10, marginRight: 10, marginLeft: 10}}>
+                   <View style={{flex: 1, justifyContent: 'space-around', marginTop: 10}}>
+                       <View style={{ flexDirection: 'column', justifyContent: 'center', marginTop: 10, marginRight: 10, marginLeft: 10}}>
+                       <Text style={{fontSize: 40, textAlign: 'center'}}> Your Result </Text>
+                       <Text style={{fontSize: 35, textAlign: 'center'}}>{percentResults} % </Text>
+                       </View>
+                       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                       <View>
+                       <Text style={{fontSize: 30, textAlign: 'center'}}> Correct</Text>
+                       <Text style={{fontSize: 30, textAlign: 'center'}}> {correct} </Text>
+                       <TouchableOpacity
+                        style={[Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn, {backgroundColor: '#447581'}]}
+                       onPress={() => this.setState({number: 0, correct: 0, Incorrect: 0})}
+                       
+                       >
+                       <Text style={{color: '#f4f4f4', fontSize: 20}}>Restart Quiz</Text>
+                       </TouchableOpacity>
+                       </View>
+                       <View>
+                       <Text style={{fontSize: 30, textAlign: 'center'}}> Incorrect</Text>
+                       <Text style={{fontSize: 30, textAlign: 'center'}}> {Incorrect} </Text>
+                       <TouchableOpacity
+                        style={[Platform.OS === 'ios' ? styles.iosSubmitBtn: styles.androidSubmitBtn, {backgroundColor: '#447581'}]}
+                       onPress={() => navigation.navigate('Decks')}
+                       >
+                       <Text style={{color: '#f4f4f4', fontSize: 20}}>Back to Deck</Text>
+                       </TouchableOpacity>
+                       </View>
+                       </View>
+                       </View>
+               </View>
                     }
+                  
                  </View>
-                }
             </View>
         )
     }

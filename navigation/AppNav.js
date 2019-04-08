@@ -7,13 +7,14 @@ import { FontAwesome, Ionicons, Entypo } from '@expo/vector-icons'
 import Decks from '../components/Decks'
 import AddCard from '../components/AddCard'
 import Quiz from '../components/Quiz'
-import QuizResults from '../components/QuizRsults'
+
+
 
 const AppNav = Platform.OS === 'ios'?   createBottomTabNavigator({
     Deck: {
         screen: DeckHome,
      navigationOptions: {
-         tabBarLabel: 'Deck',
+         tabBarLabel: 'Home',
          tabBarIcon: ({tintColor}) => <Ionicons name='ios-home' size={30} color={tintColor}/>
      }
     },
@@ -61,7 +62,7 @@ const AppNav = Platform.OS === 'ios'?   createBottomTabNavigator({
         screen: DeckHome,
      navigationOptions: {
          
-         tabBarLabel: 'Deck',
+         tabBarLabel: 'Home',
          tabBarIcon: () => <Ionicons name='ios-home' size={30} color='#447581'/>
      }
     },
@@ -130,19 +131,6 @@ const MainAppNav = createStackNavigator({
               
             },
             title: 'Quiz',
-            headerTintColor: '#f4f4f4'
-          }
-    },
-    QuizResults: {
-        screen: QuizResults,
-        navigationOptions: {
-            headerTintColor: '#f4f4f4',
-            headerStyle: {
-              backgroundColor: '#335a6b',
-              height: 40,
-              
-            },
-            title: 'Quiz Results',
             headerTintColor: '#f4f4f4'
           }
     }
