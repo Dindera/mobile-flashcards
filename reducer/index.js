@@ -9,9 +9,11 @@ function decks (state = {}, action){
             ...action.decks
         }
         case ADD_DECKS:
+
         return {
             ...state,
-            ...action.deck
+            ...action.deck,
+            
         }
         case REMOVE_DECK :
         const data = state

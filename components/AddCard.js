@@ -31,11 +31,13 @@ class AddCard extends Component {
         const title = this.props.deckId
 
         const card = this.state
-        
-        dispatch(addCard(deckId,card))
-        addCardToDeck({title,card})
-        
+  
+            dispatch(addCard(deckId,card))
+            addCardToDeck({title,card})
 
+
+        
+         
      goBack()
 
 

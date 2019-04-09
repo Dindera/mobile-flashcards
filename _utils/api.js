@@ -9,8 +9,8 @@ export function getDeck (id) {
     return AsyncStorage.getItem(DECK_STORAGE_KEY)
     .then((deck) => {
 
-        //   console.log('Storage',  deck, 'I D','/n', id) 
-          return JSON.parse(deck)
+          console.log('Storage',  deck, 'I D','/n', id) 
+        //   return JSON.parse(deck)
         })
        .catch((err)=> console.log('There was an error in getting deck', err))
 }
@@ -21,8 +21,8 @@ export function getDecks () {
     
      return AsyncStorage.getItem(DECK_STORAGE_KEY)
     .then((deck) =>  {
-    //  console.log('Storage',  deck) 
-    //  AsyncStorage.clear() 
+    AsyncStorage.clear()
+
      return JSON.parse(deck)
     })
     .catch((err)=> console.log('There was an error in getting decks', err))
@@ -42,11 +42,11 @@ export function addCardToDeck ({title, card}) {
     .then((results) => {
        const data = JSON.parse(results)
        data[title]['questions'] = data[title]['questions'].concat([card])
-    //    console.log('Data Questtion', data,)
+    
        AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(data))
-
+ 
        return AsyncStorage.getItem(DECK_STORAGE_KEY)
-    }).then((stringResult) => getDeck(stringResult))
+    })
     .catch((err)=> console.log('There was an error in adding card', err))
 }
 

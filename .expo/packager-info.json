@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 1328,
-  "expoServerNgrokUrl": "https://kf-rtm.anonymous.mobile-flashcards.exp.direct",
-  "packagerNgrokUrl": "https://packager.kf-rtm.anonymous.mobile-flashcards.exp.direct",
-  "ngrokPid": 1228,
+  "packagerPid": 12064,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null
 }
